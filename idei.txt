@@ -1,0 +1,31 @@
+Platforma de socializare cu notificari prin email:
+	- front
+		- pagina de inregistrare
+		- pagina cu postari
+		- pagina de administrare cont
+			- sterge cont + update email (optinal) 
+	- back
+		- back pentru front
+			- deserverste front
+			- baza de date:
+				- utilizator (id, username, email, nume, prenume)
+				- postari ()
+		- rabbitmq
+			- aici se posteaza evenimentele emailurile pe utilizator
+			- cozi:	create utilizator, stergere utilizator
+		- serviciu de email
+			- rest api:
+				- trimis email
+				- listare email-uri pentru un utilizator
+			- consuma evenimentele din rabbitmq
+				- creaza/sterge utlizatori
+			- baza de date:
+				- utilizator (id si email)
+				- istoric mesaje (id mesaj, id user, mesaj)
+
+		- api gateway
+			- din front faci request la gateway care te redirectioneaza
+				- localhost:8080/api/signup
+				- localhost:8080/api/posts
+				- localhost:8080/api/manageaccount
+				- localhost:8080/api/emails
