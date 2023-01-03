@@ -18,9 +18,9 @@ public class User {
 	private String userName;
 
 	@Column(name = "EMAIL")
-	private String email;
+	private String emailAddress;
 
-	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<EmailHistory> emails;
 
 }

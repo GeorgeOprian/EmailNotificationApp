@@ -9,6 +9,9 @@ import java.util.List;
 @Data
 public class EmailRequest implements Serializable {
 
+	@JsonProperty("sender")
+	private Long sender;
+
 	@JsonProperty("recipients")
 	private List<Long> recipients;
 
