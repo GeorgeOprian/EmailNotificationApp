@@ -1,19 +1,22 @@
 package com.email.emailservice.controller;
 
 import com.email.emailservice.Dtos.EmailRequest;
+import com.email.emailservice.Dtos.UserEmailResponse;
 import com.email.emailservice.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/newemail")
+@RequestMapping("/email")
 public class EmailController {
 
 	@Autowired
 	private EmailService service;
 
-	@PostMapping
+	@PostMapping("/newemail")
 	public ResponseEntity<String> sendEmailToAllUsers(@RequestBody EmailRequest body) {
 
 		String response = service.sendEmail(body);
@@ -21,5 +24,9 @@ public class EmailController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/")
+	public ResponseEntity<List<UserEmailResponse>> getUserEmails(@RequestParam(name = "user") Long userId) {
+		return ResponseEntity.ok(service.loadEmailsForUser(userId));
+	}
 
 }
