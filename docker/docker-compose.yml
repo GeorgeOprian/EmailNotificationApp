@@ -1,0 +1,23 @@
+services:
+  postgres:
+    container_name: email-service-postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: pgadmin
+      POSTGRES_PASSWORD: pgadmin
+      PGDATA: /data/postgres
+      POSTGRES_DB: email_service
+    ports:
+      - "5432:5432"
+    volumes:
+      - email-service-postgres-data:/data/postgres
+    networks:
+      - postgres
+    restart: unless-stopped
+  
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  email-service-postgres-data:
