@@ -8,7 +8,7 @@ import com.email.emailservice.model.Recipient;
 import com.email.emailservice.model.User;
 import com.email.emailservice.repository.UserRepository;
 import com.email.emailservice.service.EmailService;
-import com.email.emailservice.service.sender.EmailSenderService;
+import com.email.emailservice.service.mailsender.EmailServiceCaller;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-	private final EmailSenderService emailSender;
+	private final EmailServiceCaller emailSender;
 
 	private final UserRepository userRepository;
 
-	public EmailServiceImpl(EmailSenderService emailSender, UserRepository userRepository) {
+	public EmailServiceImpl(EmailServiceCaller emailSender, UserRepository userRepository) {
 		this.emailSender = emailSender;
 		this.userRepository = userRepository;
 	}
@@ -93,9 +93,10 @@ public class EmailServiceImpl implements EmailService {
 
 	private void saveSentEmails(User sender, EmailRequest requestBody) {
 		List<EmailHistory> senderEmails = sender.getEmails();
-		if(senderEmails == null || senderEmails.isEmpty()) {
+		if(senderEmails.isEmpty()) {
 			senderEmails = new ArrayList<>();
 		}
+
 		EmailHistory email = createNewEmailHistory(sender, requestBody);
 		senderEmails.add(email);
 

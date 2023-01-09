@@ -14,6 +14,16 @@ services:
       - postgres
     env_file:
       - env/EmailServicePostgres.env
+  rabbitmq:
+    hostname: 'email-service-rabbitmq'
+    container_name: email-service-rabbitmq
+    image: rabbitmq:3.9.11-management-alpine
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - '~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/mnesia/'
     
   
 networks:
@@ -23,3 +33,4 @@ networks:
 volumes:
   email-service-postgres-data:
     name: email-service-postgres-data
+  

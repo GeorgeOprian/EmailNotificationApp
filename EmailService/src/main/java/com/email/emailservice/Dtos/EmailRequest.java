@@ -2,11 +2,13 @@ package com.email.emailservice.Dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Data
+@ToString
 public class EmailRequest implements Serializable {
 
 	@JsonProperty("sender")

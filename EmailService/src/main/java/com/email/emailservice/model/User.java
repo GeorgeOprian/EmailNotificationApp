@@ -3,6 +3,7 @@ package com.email.emailservice.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,7 +21,7 @@ public class User {
 	@Column(name = "EMAIL")
 	private String emailAddress;
 
-	@OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<EmailHistory> emails;
+	@OneToMany(mappedBy = "sender", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private List<EmailHistory> emails = new ArrayList<>();
 
 }

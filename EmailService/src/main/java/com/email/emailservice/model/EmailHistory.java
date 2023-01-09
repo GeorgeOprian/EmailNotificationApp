@@ -25,6 +25,6 @@ public class EmailHistory {
 	@JoinColumn(name = "SENDER_ID")
 	private User sender;
 
-	@OneToMany(mappedBy = "email", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "email", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Recipient> recipients;
 }

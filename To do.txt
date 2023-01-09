@@ -1,0 +1,7 @@
+To do:
+	- API gateway
+	- docker compose:
+		- builduieste si email service
+		- build pentru API gateway
+		- build pentru partea lui Bora
+	- docker swarn

@@ -1,0 +1,17 @@
+Utilizatorii se trimit intre serviciul de web si cel de mail prin API
+	- de dezvolat endpoint-uri ca sa gestioneze userii
+		- post
+		- patch
+		- delete
+
+Microservicii:
+	- server web + bd
+		- trimite la rabbitmq mesaje pentru a posta mail-uri
+	- api gateway
+		- redirectioneaza apelurile spre serverul web sau serviciul de mail, in cazul in care se cer email-urile unui utilizator
+		- 
+	- serviciu de mail + bd
+	- rabbitmq
+		- serverul web posteaza mesajele care vor fi trimise la utilizatori
+		- serviciul de mail le consuma si le trimite
+		- https://youtu.be/nFxjaVmFj5E?t=1346
