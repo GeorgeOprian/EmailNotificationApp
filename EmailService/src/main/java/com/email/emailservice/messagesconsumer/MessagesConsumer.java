@@ -7,7 +7,6 @@ import com.email.emailservice.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -16,14 +15,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class EmailsConsumer {
+public class MessagesConsumer {
 
 	private final EmailService emailService;
 	private final UserService userService;
 	private final ObjectMapper mapper;
 	private final ThreadPoolTaskExecutor taskExecutor;
 
-	public EmailsConsumer(EmailService emailService, UserService userService, ObjectMapper mapper, ThreadPoolTaskExecutor taskExecutor) {
+	public MessagesConsumer(EmailService emailService, UserService userService, ObjectMapper mapper, ThreadPoolTaskExecutor taskExecutor) {
 		this.emailService = emailService;
 		this.userService = userService;
 		this.mapper = mapper;
@@ -34,7 +33,7 @@ public class EmailsConsumer {
 	public void receiveEmails(@Payload String fileBody) throws JsonProcessingException, ExecutionException, InterruptedException {
 		if (!fileBody.isEmpty()) {
 			EmailRequest request = mapper.readValue(fileBody, EmailRequest.class);
-			CompletableFuture.supplyAsync(() -> emailService.sendEmail(request), taskExecutor);
+			CompletableFuture.supplyAsync(() -> emailService.sendEmail(request), taskExecutor).get();
 		}
 		System.out.println(fileBody);
 	}

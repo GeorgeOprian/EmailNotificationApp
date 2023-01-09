@@ -4,10 +4,14 @@ import com.email.emailservice.Dtos.UserRequest;
 import com.email.emailservice.model.User;
 import com.email.emailservice.repository.UserRepository;
 import com.email.emailservice.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+	private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	private final UserRepository repository;
 
@@ -17,17 +21,18 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String handleUserOperation(UserRequest request) {
+		logger.debug("Enter User Operation");
 		if (request.getOperation().equals(0)) {
-			System.out.println("Sterge user");
+			logger.debug("Delete User");
 			repository.deleteById(request.getId());
 		} else if (request.getOperation().equals(1) || request.getOperation().equals(2)) {
+			logger.debug("Create/update User");
 			User user = createUserFromRequest(request);
-			System.out.println("Salveaza user");
 			repository.save(user);
 		} else {
 			return "Operation " + request.getOperation() + " is not valid.";
 		}
-		System.out.println("A terminat user operation");
+
 		return "User data saved.";
 	}
 
