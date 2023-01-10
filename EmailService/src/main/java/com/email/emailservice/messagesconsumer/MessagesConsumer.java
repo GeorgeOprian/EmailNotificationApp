@@ -30,19 +30,19 @@ public class MessagesConsumer {
 	}
 
 	@RabbitListener(queues = { "${queue.email}" })
-	public void receiveEmails(@Payload String fileBody) throws JsonProcessingException, ExecutionException, InterruptedException {
+	public void receiveEmails(@Payload String fileBody) throws JsonProcessingException {
 		if (!fileBody.isEmpty()) {
 			EmailRequest request = mapper.readValue(fileBody, EmailRequest.class);
-			CompletableFuture.supplyAsync(() -> emailService.sendEmail(request), taskExecutor).get();
+			CompletableFuture.runAsync(() -> emailService.sendEmail(request), taskExecutor);
 		}
 		System.out.println(fileBody);
 	}
 
 	@RabbitListener(queues = { "${queue.userChanges}" })
-	public void receiveUserChanges(@Payload String fileBody) throws JsonProcessingException, ExecutionException, InterruptedException {
+	public void receiveUserChanges(@Payload String fileBody) throws JsonProcessingException {
 		if (!fileBody.isEmpty()) {
 			UserRequest request = mapper.readValue(fileBody, UserRequest.class);
-			CompletableFuture.supplyAsync(() -> userService.handleUserOperation(request), taskExecutor).get();
+			CompletableFuture.runAsync(() -> userService.handleUserOperation(request), taskExecutor);
 		}
 		System.out.println(fileBody);
 	}
