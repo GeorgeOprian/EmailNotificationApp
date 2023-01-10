@@ -1,0 +1,15 @@
+Pe laptopul de la munca fac un container de rabit.
+Postez cu codul de python de la prof in container
+Consum din email service.
+
+Prioritati:
+    - container rabbitmq
+    - cum a facut proful la lab?
+    - postat mesaje in 2 cozi: 
+        - userMaint
+            - insert
+            - update
+            - delete
+        - emails
+            - foloseste fix dto-ul de pe request pe care il posteaza in coada
+    

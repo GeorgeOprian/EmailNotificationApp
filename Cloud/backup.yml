@@ -1,0 +1,64 @@
+version: "3"
+
+services:
+  
+  postgres:
+    image: 856279386791.dkr.ecr.eu-west-1.amazonaws.com/vs6/postgres:trunk
+    restart: unless-stopped
+    hostname: tgcs-postgres
+    container_name: tgcs-postgres
+    volumes:
+      - postgres-data:/bitnami/postgresql
+      - postgres-tablespaces:/tablespaces
+      - ./volumes/postgres/conf/postgresql.conf:/bitnami/postgresql/conf/postgresql.conf
+    networks:
+      - infrastructure
+    ports:
+      - "127.0.0.1:5431:5432"
+    env_file:
+      - env/postgres.env 
+
+  mongodb:
+    restart: unless-stopped
+    hostname: tgcs-mongodb
+    image: mongo:4.2
+    container_name: tgcs-mongodb
+    env_file:
+      - env/mongodb.env
+    networks:
+      - infrastructure
+    volumes:
+      - ./volumes/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - mongodb-data:/data/db
+    ports:
+      - "127.0.0.1:27117-27119:27017-27019" 
+
+  visualstore-app:
+    image: 856279386791.dkr.ecr.eu-west-1.amazonaws.com/vs6/visualstore-app:trunk
+    hostname: tgcs-visualstore-app
+    container_name: tgcs-visualstore-app
+    restart: unless-stopped
+    networks:
+      - public
+      - infrastructure
+    ports:
+      - "127.0.0.1:8080:8080"
+    env_file:
+      - env/visualstore-app.env
+
+volumes:
+  mongodb-data:
+    name: mondodb-data
+  postgres-data:
+    name: postgres-data
+  postgres-tablespaces:
+    name: postgres-tablespaces
+  postgres-tools-data:
+    name: postgres-tools-data 
+networks:
+  infrastructure:
+    name: infrastructure
+  public:
+    name: public
+    driver: bridge
+

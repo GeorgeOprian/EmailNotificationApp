@@ -1,0 +1,13 @@
+Intra in linia de comanda a containerului
+    docker exec -it <contaner_name/container_id> bash
+
+Conectare baza de date din container:
+    psql -d databasename -U username -W
+    - concret
+        psql -d email_service -U pgadmin -W
+Listeaza schemele:
+    SELECT schema_name
+    FROM information_schema.schemata;
+
+
+
