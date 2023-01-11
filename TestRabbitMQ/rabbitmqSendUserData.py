@@ -3,7 +3,7 @@ import json
 
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
-channel.queue_declare(queue='UserChangesQueue')
+channel.queue_declare(queue='UserChangesQueue', durable = True)
 
 
 toSend = {

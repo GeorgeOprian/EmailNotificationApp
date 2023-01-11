@@ -7,7 +7,7 @@ services:
     image: postgres
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - email-service-postgres-data:/data/postgres
       - ./sql/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql
@@ -32,7 +32,7 @@ services:
     image: georgeoprian/email-service-app
     restart: unless-stopped
     ports:
-      - "8082:8082"
+      - "127.0.0.1:8082:8080"
     networks:
       - public
       - infrastucture
@@ -51,4 +51,6 @@ networks:
 volumes:
   email-service-postgres-data:
     name: email-service-postgres-data
+  email-service-rabbitmq-data:
+    name: email-service-rabbitmq-data
   
