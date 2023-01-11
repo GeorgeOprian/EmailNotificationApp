@@ -1,5 +1,5 @@
 To do linux:
-	- build nou de imagine de docker pentru ca s-a schimbat .properties
-	- definit cozi default pentru rabbit
+	- (done) build nou de imagine de docker pentru ca s-a schimbat .properties
+	- (done) definit cozi default pentru rabbit
 	- api gataway
 	- docker swarn
