@@ -19,18 +19,24 @@ services:
     hostname: 'email-service-rabbitmq'
     container_name: email-service-rabbitmq
     image: rabbitmq:3.9.11-management-alpine
-    restart: unless-stopped
+    # restart: unless-stopped
     ports:
       - "5672:5672"
       - "15672:15672"
     volumes:
-      - '~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/mnesia/'
-    networks:
-      - infrastucture
+      - type: bind
+        source: ./rabbitmq-enabled-plugins
+        target: /etc/rabbitmq/enabled_plugins
+      - type: bind
+        source: ./rabbitmq.config
+        target: /etc/rabbitmq/rabbitmq.config
+      - type: bind
+        source: ./rabbitmq-defs.json
+        target: /etc/rabbitmq/rabbitmq-defs.json
   email-service-app:
     container_name: email-service-app
     image: georgeoprian/email-service-app
-    restart: unless-stopped
+    # restart: unless-stopped
     ports:
       - "127.0.0.1:8082:8080"
     networks:
@@ -38,7 +44,6 @@ services:
       - infrastucture
     env_file:
       - env/EmailServiceApp.env
-    
   
 networks:
   infrastucture:

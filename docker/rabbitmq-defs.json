@@ -41,18 +41,17 @@
       {
         "source": "EmailQueue",
         "vhost": "/",
-        "destination": "UserChangesQueue",
+        "destination": "EmailQueue",
         "destination_type": "queue",
         "routing_key": "*",
         "arguments": {}
       },
       {
-        "name": "UserChangesQueue",
+        "source": "UserChangesQueue",
         "vhost": "/",
-        "type": "fanout",
-        "durable": true,
-        "auto_delete": false,
-        "internal": false,
+        "destination": "UserChangesQueue",
+        "destination_type": "queue",
+        "routing_key": "*",
         "arguments": {}
       }
     ]
