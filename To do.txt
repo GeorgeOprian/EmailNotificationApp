@@ -1,4 +1,5 @@
 To do linux:
 	- build nou de imagine de docker pentru ca s-a schimbat .properties
 	- definit cozi default pentru rabbit
+	- api gataway
 	- docker swarn
