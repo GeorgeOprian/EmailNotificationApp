@@ -1,0 +1,59 @@
+{
+    "exchanges": [
+      {
+        "name": "EmailQueue",
+        "vhost": "/",
+        "type": "fanout",
+        "durable": true,
+        "auto_delete": false,
+        "internal": false,
+        "arguments": {}
+      },
+      {
+        "name": "UserChangesQueue",
+        "vhost": "/",
+        "type": "fanout",
+        "durable": true,
+        "auto_delete": false,
+        "internal": false,
+        "arguments": {}
+      }
+    ],
+    "queues": [
+      {
+        "name": "EmailQueue",
+        "vhost": "/",
+        "durable": true,
+        "auto_delete": false,
+        "arguments": {}
+      },
+      {
+        "name": "UserChangesQueue",
+        "vhost": "/",
+        "type": "fanout",
+        "durable": true,
+        "auto_delete": false,
+        "internal": false,
+        "arguments": {}
+      }
+    ],
+    "bindings": [
+      {
+        "source": "EmailQueue",
+        "vhost": "/",
+        "destination": "UserChangesQueue",
+        "destination_type": "queue",
+        "routing_key": "*",
+        "arguments": {}
+      },
+      {
+        "name": "UserChangesQueue",
+        "vhost": "/",
+        "type": "fanout",
+        "durable": true,
+        "auto_delete": false,
+        "internal": false,
+        "arguments": {}
+      }
+    ]
+  }
