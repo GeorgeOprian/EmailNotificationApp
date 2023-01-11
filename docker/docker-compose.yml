@@ -15,11 +15,11 @@ services:
       - infrastucture
     env_file:
       - env/EmailServicePostgres.env
+
   rabbitmq:
     hostname: 'email-service-rabbitmq'
     container_name: email-service-rabbitmq
     image: rabbitmq:3.9.11-management-alpine
-    # restart: unless-stopped
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -33,10 +33,10 @@ services:
       - type: bind
         source: ./rabbitmq-defs.json
         target: /etc/rabbitmq/rabbitmq-defs.json
+
   email-service-app:
     container_name: email-service-app
     image: georgeoprian/email-service-app
-    # restart: unless-stopped
     ports:
       - "127.0.0.1:8082:8080"
     networks:
