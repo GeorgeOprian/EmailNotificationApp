@@ -1,0 +1,12 @@
+.navbarWidth {
+    background-color: ivory;
+    margin: 2rem;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    font-weight: 900;
+}
+
+.navbarStyle {
+    display: flex;
+    justify-content: space-between;
+}

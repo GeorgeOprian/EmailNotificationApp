@@ -7,8 +7,8 @@ channel.queue_declare(queue='EmailQueue', durable = True)
 
 
 toSend = {
-    "sender": 2,
-    "recipients": [1],
+    "sender": 1,
+    "recipients": [1, 2],
     "emailSubject": "Test email",
     "emailBody": "Email de test."
 }
