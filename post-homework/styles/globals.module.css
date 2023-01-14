@@ -1,0 +1,12 @@
+.centerOnColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.centerOnLine {
+  display: flex;
+  justify-content: center;
+}
+
+
