@@ -43,7 +43,9 @@ export default async function createUser(req: NextApiRequest, res: NextApiRespon
 
         //Send a message to the queue
         channel.sendToQueue('EmailQueue', Buffer.from(JSON.stringify(rabbitMqEmail)))
-    
+        console.log("Email sent!...");
+
+
         res.json(200);
     } catch (err: any) {
         res.json({err});
