@@ -2,16 +2,25 @@ version: "3.7"
 
 services:
 
-  api-gateway:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-    links:
-      - email-service-app
+  # api-gateway:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "80:80"
+  #   links:
+  #     - email-service-app
+  #   networks:
+  #     - infrastucture
+
+  post-service-app: #This is the name of our Nextjs application.
+    container_name: post-service-app
+    image: alexbnicolae/post-service-app
     networks:
+      - public
       - infrastucture
+    ports: #This is used to map the container’s ports to the host machine.
+      - "127.0.0.1:3000:3000"
   
   postgres:
     container_name: email-service-postgres
