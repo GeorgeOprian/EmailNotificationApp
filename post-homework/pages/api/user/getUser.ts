@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import connectMongo from '../../../middleware/database';
 import User from '../../../api/models/users.schema';
+import NextCors from 'nextjs-cors';
 
-export default async function createUser(req: NextApiRequest, res: NextApiResponse){
+export default async function getUser(req: NextApiRequest, res: NextApiResponse){
 
     const { email } = req.body;
 

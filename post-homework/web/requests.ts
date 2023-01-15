@@ -19,7 +19,7 @@
 
     const { resUser } = await res.json();
 
-    console.log(resUser)
+    return resUser;
 }
 
 export const getUser = async (
@@ -99,4 +99,22 @@ export const updateUser = async (
             method: 'POST'
         }
     )
+}
+
+export const fetchEmails = async (
+    userRefId: number,
+) : Promise<any> => {
+
+    const data  = await fetch(
+        `http://host.docker.internal:8080/email/?user=${userRefId}`,
+        {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            
+            method: 'GET'
+        }
+    )
+
+    return data.json();
 }
