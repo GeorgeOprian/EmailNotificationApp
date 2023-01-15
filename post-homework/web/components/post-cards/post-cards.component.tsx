@@ -40,7 +40,6 @@ const PostCardsComponent = observer(({
         []
     )
 
-
     return (
         <div className={styles.main}>
             {

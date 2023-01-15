@@ -13,7 +13,8 @@ const UserPage = () => {
     const [editUserInfo, setEditUserInfo] = useState<UserType>({
         _id: user?._id ?? '',
         name: user?.name ?? '',
-        email: user?._id ?? ''
+        email: user?._id ?? '',
+        
     })
     const [editDone, setEditDone] = useState<boolean>(true)
     
