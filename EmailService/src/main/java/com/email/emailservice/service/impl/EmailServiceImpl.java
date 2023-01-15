@@ -9,7 +9,7 @@ import com.email.emailservice.model.User;
 import com.email.emailservice.repository.UserRepository;
 import com.email.emailservice.service.EmailService;
 import com.email.emailservice.service.mailsender.EmailServiceCaller;
-import com.email.emailservice.service.user.UserServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class EmailServiceImpl implements EmailService {
-
-	private Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
 	private final EmailServiceCaller emailSender;
 
@@ -69,13 +68,15 @@ public class EmailServiceImpl implements EmailService {
 
 	@Override
 	public String sendEmail(EmailRequest requestBody) {
-		logger.debug("Enter send emails service");
+		log.info("Enter send emails service");
 		Optional<User> senderOpt = userRepository.findById(requestBody.getSender());
 		if (senderOpt.isEmpty()) {
-			throw new UserNotFoundException("Sender with id: " + requestBody.getSender() + " was not found.");
+			String errorMessage = "Sender with id: " + requestBody.getSender() + " was not found.";
+			log.info(errorMessage);
+			throw new UserNotFoundException(errorMessage);
 		}
 
-		logger.debug(senderOpt.get() + " was read");
+		log.info(senderOpt.get() + " was read");
 
 		List<User> recipients;
 		if (requestBody.getRecipients() != null && !requestBody.getRecipients().isEmpty()) {
@@ -88,16 +89,16 @@ public class EmailServiceImpl implements EmailService {
 		} else {
 			recipients = userRepository.findAll();
 		}
-		logger.debug("Recipients were read");
+		log.info("Recipients were read");
 
 		List<String> recipientsEmailAddresses = recipients.stream().map(User::getEmailAddress).collect(Collectors.toList());
 
 		emailSender.sendSimpleEmail(requestBody.getEmailSubject(), recipientsEmailAddresses, requestBody.getEmailBody());
 
-		logger.debug("Email was sent.");
+		log.info("Email was sent.");
 
 		saveSentEmails(senderOpt.get(), requestBody);
-		logger.debug("Email was saved in db");
+		log.info("Email was saved in db");
 		return buildResponseMessage(requestBody);
 	}
 
@@ -154,7 +155,7 @@ public class EmailServiceImpl implements EmailService {
 		} else {
 			errorMessage = inputUsersIds.stream().map(String::valueOf).collect(Collectors.joining("", "User with id ", " was not found."));
 		}
-
+		log.info(errorMessage);
 		throw new UserNotFoundException(errorMessage);
 	}
 
