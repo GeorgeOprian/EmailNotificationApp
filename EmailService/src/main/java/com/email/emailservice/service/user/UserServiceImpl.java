@@ -27,7 +27,11 @@ public class UserServiceImpl implements UserService {
 			log.info("Create/update User");
 			User user = createUserFromRequest(request);
 			try {
-				repository.save(user);
+				try {
+					repository.save(user);
+				} catch (Exception e) {
+					log.info(e.getMessage(), e);
+				}
 			} catch (Exception e) {
 				log.info(e.getMessage());
 			}

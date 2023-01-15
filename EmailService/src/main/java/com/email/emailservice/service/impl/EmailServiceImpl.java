@@ -112,8 +112,12 @@ public class EmailServiceImpl implements EmailService {
 		senderEmails.add(email);
 
 		sender.setEmails(senderEmails);
-		
-		userRepository.save(sender);
+
+		try {
+			userRepository.save(sender);
+		} catch (Exception e) {
+			log.info(e.getMessage(), e);
+		}
 	}
 
 	private EmailHistory createNewEmailHistory(User sender, EmailRequest requestBody) {
