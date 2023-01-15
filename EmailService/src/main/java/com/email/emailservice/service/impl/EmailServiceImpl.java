@@ -56,6 +56,10 @@ public class EmailServiceImpl implements EmailService {
 
 	private List<String> getRecipientsEmails(String recipients) {
 		List<String> emailAddresses = new ArrayList<>();
+		if (recipients == null || recipients.isEmpty() || recipients.isBlank()) {
+			return new ArrayList<>();
+		}
+
 		List<Long> recipientsIDs = Arrays.asList(recipients.split(",")).stream().map(id -> Long.parseLong(id)).collect(Collectors.toList());
 		for (Long recipient : recipientsIDs) {
 			Optional<User> recipientOpt = userRepository.findById(recipient);
