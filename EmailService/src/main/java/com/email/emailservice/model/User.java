@@ -23,7 +23,8 @@ public class User {
 	@Column(name = "EMAIL")
 	private String emailAddress;
 
-	@OneToMany(mappedBy = "sender", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinColumn(name = "SENDER_ID")
 	private List<EmailHistory> emails = new ArrayList<>();
 
 }

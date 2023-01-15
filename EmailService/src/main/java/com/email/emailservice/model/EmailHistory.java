@@ -21,10 +21,7 @@ public class EmailHistory {
 	@Column(name = "SUBJECT")
 	private String subject;
 
-	@ManyToOne
-	@JoinColumn(name = "SENDER_ID")
-	private User sender;
+	@Column(name = "recipients")
+	private String recipients;
 
-	@OneToMany(mappedBy = "email", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	private List<Recipient> recipients;
 }

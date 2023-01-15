@@ -6,13 +6,16 @@ import com.email.emailservice.service.EmailService;
 import com.email.emailservice.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
+@Slf4j
 @Component
 public class MessagesConsumer {
 
@@ -32,7 +35,12 @@ public class MessagesConsumer {
 	public void receiveEmails(@Payload String fileBody) throws JsonProcessingException {
 		if (!fileBody.isEmpty()) {
 			EmailRequest request = mapper.readValue(fileBody, EmailRequest.class);
-			CompletableFuture.runAsync(() -> emailService.sendEmail(request), taskExecutor);
+			CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> emailService.sendEmail(request), taskExecutor);
+			try {
+				completableFuture.join();
+			} catch (CompletionException e) {
+				log.info(e.getMessage(), e);
+			}
 		}
 		System.out.println(fileBody);
 	}

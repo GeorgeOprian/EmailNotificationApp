@@ -4,17 +4,16 @@ import com.email.emailservice.Dtos.EmailRequest;
 import com.email.emailservice.Dtos.UserEmailResponse;
 import com.email.emailservice.exception.UserNotFoundException;
 import com.email.emailservice.model.EmailHistory;
-import com.email.emailservice.model.Recipient;
 import com.email.emailservice.model.User;
+import com.email.emailservice.repository.EmailHistoryRepository;
 import com.email.emailservice.repository.UserRepository;
 import com.email.emailservice.service.EmailService;
 import com.email.emailservice.service.mailsender.EmailServiceCaller;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,10 +22,12 @@ public class EmailServiceImpl implements EmailService {
 
 	private final EmailServiceCaller emailSender;
 
+	private final EmailHistoryRepository emailHistoryRepository;
 	private final UserRepository userRepository;
 
-	public EmailServiceImpl(EmailServiceCaller emailSender, UserRepository userRepository) {
+	public EmailServiceImpl(EmailServiceCaller emailSender, EmailHistoryRepository emailHistoryRepository, UserRepository userRepository) {
 		this.emailSender = emailSender;
+		this.emailHistoryRepository = emailHistoryRepository;
 		this.userRepository = userRepository;
 	}
 
@@ -53,13 +54,14 @@ public class EmailServiceImpl implements EmailService {
 		return response;
 	}
 
-	private List<String> getRecipientsEmails(List<Recipient> recipients) {
+	private List<String> getRecipientsEmails(String recipients) {
 		List<String> emailAddresses = new ArrayList<>();
-		for (Recipient recipient : recipients) {
-			Optional<User> recipientOpt = userRepository.findById(recipient.getRecipientId());
+		List<Long> recipientsIDs = Arrays.asList(recipients.split(",")).stream().map(id -> Long.parseLong(id)).collect(Collectors.toList());
+		for (Long recipient : recipientsIDs) {
+			Optional<User> recipientOpt = userRepository.findById(recipient);
 
 			if (recipientOpt.isEmpty()) {
-				throw new UserNotFoundException("User with id: " + recipient.getRecipientId() + " was not found.");
+				throw new UserNotFoundException("User with id: " + recipient + " was not found.");
 			}
 			emailAddresses.add(recipientOpt.get().getEmailAddress());
 		}
@@ -69,7 +71,13 @@ public class EmailServiceImpl implements EmailService {
 	@Override
 	public String sendEmail(EmailRequest requestBody) {
 		log.info("Enter send emails service");
-		Optional<User> senderOpt = userRepository.findById(requestBody.getSender());
+		Optional<User> senderOpt;
+		try {
+			senderOpt = userRepository.findById(requestBody.getSender());
+		} catch (Exception e) {
+			throw new CompletionException(e);
+		}
+
 		if (senderOpt.isEmpty()) {
 			String errorMessage = "Sender with id: " + requestBody.getSender() + " was not found.";
 			log.info(errorMessage);
@@ -104,45 +112,33 @@ public class EmailServiceImpl implements EmailService {
 
 	private void saveSentEmails(User sender, EmailRequest requestBody) {
 		List<EmailHistory> senderEmails = sender.getEmails();
-		if(senderEmails.isEmpty()) {
+		if (senderEmails.isEmpty()) {
 			senderEmails = new ArrayList<>();
 		}
 
-		EmailHistory email = createNewEmailHistory(sender, requestBody);
+		EmailHistory email = createNewEmailHistory(requestBody);
 		senderEmails.add(email);
 
 		sender.setEmails(senderEmails);
 
-		try {
-			userRepository.save(sender);
-		} catch (Exception e) {
-			log.info(e.getMessage(), e);
-		}
+		emailHistoryRepository.save(email);
+		userRepository.save(sender);
+
 	}
 
-	private EmailHistory createNewEmailHistory(User sender, EmailRequest requestBody) {
+	private EmailHistory createNewEmailHistory(EmailRequest requestBody) {
 		EmailHistory eh = new EmailHistory();
-		
+
 		eh.setContent(requestBody.getEmailBody());
 		eh.setSubject(requestBody.getEmailSubject());
-		eh.setSender(sender);
 
-		List<Recipient> recipients = createRecipients(requestBody, eh);
-		eh.setRecipients(recipients);
+		eh.setRecipients(createRecipients(requestBody, eh));
 
 		return eh;
 	}
 
-	private List<Recipient> createRecipients(EmailRequest requestBody, EmailHistory eh) {
-		List<Recipient> recipients = new ArrayList<>();
-		for (Long recipientId : requestBody.getRecipients()) {
-			Recipient recipient= new Recipient();
-			recipient.setEmail(eh);
-			recipient.setRecipientId(recipientId);
-
-			recipients.add(recipient);
-		}
-		return recipients;
+	private String createRecipients(EmailRequest requestBody, EmailHistory eh) {
+		return requestBody.getRecipients().stream().map(recipientId -> recipientId + ",").collect(Collectors.joining());
 	}
 
 	private void findNotFoundUsersAndThrow(List<Long> inputUsers, List<User> foundUsers) {
@@ -162,7 +158,6 @@ public class EmailServiceImpl implements EmailService {
 		log.info(errorMessage);
 		throw new UserNotFoundException(errorMessage);
 	}
-
 
 	private String buildResponseMessage(EmailRequest requestBody) {
 		StringBuilder responseMessage;
