@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx"
 
 export class GlobalState {
     isOpenModal = false
+    refreshPosts = false
 
     constructor() {
         makeAutoObservable(this)
@@ -9,5 +10,9 @@ export class GlobalState {
 
     setIsOpenModal(value: boolean){
         this.isOpenModal = value
+    }
+
+    setRefreshPosts(value: boolean){
+        this.refreshPosts = value
     }
 }

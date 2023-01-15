@@ -30,12 +30,13 @@ const Home = observer(() => {
 
   useEffect(
     () => {
-    
-        if(!session) return;
+
+        if(session === undefined) return;
         searchUser();
     },
     [session]
 ) 
+
 
   return (
     <>

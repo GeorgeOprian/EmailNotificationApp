@@ -16,14 +16,30 @@ const PostCardsComponent = observer(({
 
     const [posts, setPosts] = useState<PostType[]>([])
     const globalState = useContext(GlobalStateContext);
+
+    useEffect(
+        () => {
+
+            if(globalState.refreshPosts === true){
+                getPosts()
+                .then(data => setPosts(data))
+                .catch(e => console.log(e))
+                .finally(() => globalState.setRefreshPosts(false))
+            }
+
+        },
+        [globalState.refreshPosts]
+    )
+
     useEffect(
         () => {
             getPosts()
             .then(data => setPosts(data))
             .catch(e => console.log(e))
         },
-        [globalState.isOpenModal]
+        []
     )
+
 
     return (
         <div className={styles.main}>

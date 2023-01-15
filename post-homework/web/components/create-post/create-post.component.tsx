@@ -46,6 +46,7 @@ const CreatePostComponent = observer(({
             .finally(() => {
                 setIsCreating(false)
                 globalState.setIsOpenModal(false)
+                globalState.setRefreshPosts(true)
             })
         }
         

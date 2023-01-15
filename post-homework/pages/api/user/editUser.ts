@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import connectMongo from '../../../middleware/database';
 import User from '../../../api/models/users.schema';
+import NextCors from 'nextjs-cors';
 
 export default async function editUser(req: NextApiRequest, res: NextApiResponse){
 

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import connectMongo from '../../../middleware/database';
 import User from '../../../api/models/users.schema';
 import client, { Channel, Connection } from 'amqplib'
+import NextCors from 'nextjs-cors';
 
 export default async function createUser(req: NextApiRequest, res: NextApiResponse){
 
@@ -23,7 +24,7 @@ export default async function createUser(req: NextApiRequest, res: NextApiRespon
         })
 
         const connection: Connection = await client.connect(
-            'amqp://guest:guest@localhost:5672'    
+            'amqp://guest:guest@host.docker.internal:5672'    
         )
         // Create a channel
         const channel: Channel = await connection.createChannel()

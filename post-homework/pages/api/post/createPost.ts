@@ -4,8 +4,10 @@ import Post from '../../../api/models/posts.schema';
 import mongoose from 'mongoose';
 import client, { Channel, Connection } from 'amqplib';
 import User from '../../../api/models/users.schema';
+import NextCors from 'nextjs-cors';
 
-export default async function createUser(req: NextApiRequest, res: NextApiResponse){
+export default async function createPost(req: NextApiRequest, res: NextApiResponse){
+
 
     const { userId, text } = req.body;
     const userRef = userId;
@@ -26,7 +28,7 @@ export default async function createUser(req: NextApiRequest, res: NextApiRespon
         const allUsers = await User.find({ _id: { $ne: userRef } })
 
         const connection: Connection = await client.connect(
-            'amqp://guest:guest@localhost:5672'    
+            'amqp://guest:guest@host.docker.internal:5672'    
         )
         // Create a channel
         const channel: Channel = await connection.createChannel()

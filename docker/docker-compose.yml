@@ -8,7 +8,7 @@ services:
     build:
       context: .
     ports:
-      - "60:60"
+      - "8080:8080"
     links:
       - email-service-app
       - post-service-app
@@ -81,5 +81,7 @@ volumes:
     name: email-service-postgres-data
   email-service-rabbitmq-data:
     name: email-service-rabbitmq-data
+  mongodb-data:
+    name: mondodb-data
   
 
