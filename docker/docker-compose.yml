@@ -58,10 +58,11 @@ services:
         target: /etc/rabbitmq/rabbitmq-defs.json
 
   email-service-app:
-    container_name: email-service-app
+    # container_name: email-service-app
     image: georgeoprian/email-service-app
+    scale: 2
     ports:
-      - "127.0.0.1:8082:8080"
+      - "127.0.0.1:8082-8083:8080"
     networks:
       - public
       - infrastucture
